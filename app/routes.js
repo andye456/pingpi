@@ -2,8 +2,8 @@
 // api ---------------------------------------------------------------------
     // get all todos
 // get the beerdata schema definition
-var data = require('./models/beerdata');
-var ping = require('./models/pingdata');
+var data = require('./modules/beerdata');
+var ping = require('./modules/pingdata');
 
 console.log('routes loaded');
 module.exports = function(app) {
