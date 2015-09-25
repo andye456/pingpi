@@ -1,0 +1,143 @@
+<!-- index.html -->
+<!doctype html>
+
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="graphApp">
+<head>
+    <!-- META -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Optimize mobile viewport -->
+
+    <title>Beer Temperature</title>
+
+    <!-- SCROLLS -->
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"><!-- load bootstrap -->
+    <link rel="stylesheet" href="c3.css" />
+   <style>
+        html                    { overflow-y:scroll; }
+        body                    { padding-top:50px;}
+        #todo-list              { margin-bottom:30px; }
+		/*div {border: 1px blue solid;}*/
+    </style>
+
+  </head>
+<!-- SET THE CONTROLLER AND GET ALL temps -->
+<body ng-controller="GraphCtrl" ng-init="init()">
+<!--
+	<div class="container">
+
+		<div class="jumbotron text-center">
+			<h1>Raspberry Pi temp probe</h1>
+		</div>
+		<div id='chart'></div>
+		<div id="date-form" class="row">
+			<div class="col-sm-8 col-sm-offset-2 text-center">
+				<form>
+					<div class="form-group">
+
+						<!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+						<!--
+							<table class="table">
+								<tr>
+									<td>Start Date</td>
+									<td>
+										<input type="text"  class="form-control input-lg text-center" placeholder="yyyy-mm-ddTHH:MM:SS" ng-model="formData.start">
+									</td>
+								</tr>
+								<tr>
+									<td>End Date</td>
+									<td>
+										<input type="text" class="form-control input-lg text-center" placeholder="yyyy-mm-ddTHH:MM:SS" ng-model="formData.end">
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<div class="btn-group">
+											<!-- filterData() will set a date range to view - defaults to the last day. -->
+											<!--
+									 		<button type="submit" class="btn btn-primary btn-lg" ng-click="filterData(-1)">Back</button>
+									 		<button type="submit" class="btn btn-primary btn-lg" ng-click="filterData(+1)">Forward</button>
+									 		<button type="submit" class="btn btn-primary btn-lg" ng-click="filterData(999)">Today</button>
+									 		<button type="submit" class="btn btn-primary btn-lg" ng-click="reload()">Custom</button>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+		    </form>
+		  </div>
+		</div>
+	</div>
+	-->
+	<div class="container">
+		<!-- This is the graph for the ping data -->
+		<div class="jumbotron text-center">
+			<h1>Raspberry Pi ping probe<span class="label label-info">{{ dropped.length }}</span> </h1>
+		</div>
+		<div id='pingchart'></div>
+		<div id="date-form" class="row">
+			<div class="col-sm-8 col-sm-offset-2 text-center">
+				<form>
+					<div class="form-group">
+
+						<!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+							<table class="table">
+								<tr>
+									<td>Start Date</td>
+									<td>
+										<input type="text"  class="form-control input-lg text-center" placeholder="yyyy-mm-ddTHH:MM:SS" ng-model="pingData.start">
+									</td>
+								</tr>
+								<tr>
+									<td>End Date</td>
+									<td>
+										<input type="text" class="form-control input-lg text-center" placeholder="yyyy-mm-ddTHH:MM:SS" ng-model="pingData.end">
+									</td>
+								</tr>
+								<tr>
+									<td colspan="2">
+										<div class="btn-group">
+											<!-- filterData() will set a date range to view - defaults to the last day. -->
+									 		<button type="submit" class="btn btn-primary btn-lg" ng-click="filterPingData(-1)">Back</button>
+									 		<button type="submit" class="btn btn-primary btn-lg" ng-click="filterPingData(+1)">Forward</button>
+									 		<button type="submit" class="btn btn-primary btn-lg" ng-click="filterPingData(999)">Today</button>
+											<button type="submit" class="btn btn-primary btn-lg" ng-click="reloadPingData()">Custom</button>
+											<button type="submit" class="btn btn-primary btn-lg" ng-click="totalDropped()">Total Dropped</button>
+										</div>
+									</td>
+								</tr>
+							</table>
+							<table class="table" >
+								<thead>
+									<tr><td>Date</td><td>Dropped</td><tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="fail in fails">
+									<td>{{ fail.date }}</td>
+									<td>{{ fail.dropped }}</td>
+									</tr>
+								</tbody>
+							</table>
+							
+						</div>
+					</div>
+		    </form>
+		</div>
+	</div>
+
+	<!-- Need to put this here as c3/d3 requires that the page body has loaded before they are run -->
+	<!-- SPELLS -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script><!-- load jquery -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.27/angular.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.27/angular-route.js"></script>
+	<!-- uncomment this to use the c3.generate scope functions -->
+	<script src="core.js"></script>
+	<script src="d3.js" charset="utf-8"></script>
+	<script src="c3.js"></script>
+	<script src="c3-angular.min.js"></script>
+	<script src="c3js-directive.js"></script>
+	<script src="ui-bootstrap-tpls-0.13.3.js"></script>
+
+</body>
+</html>
+
