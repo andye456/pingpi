@@ -21,24 +21,14 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout) {
 
 	// Called when index.html is loaded this set the values in the start/end boxes to todays date
 	$scope.init = function() {
-//		$scope.formData.start=getStartDate(0);
-//		$scope.formData.end=getEndDate(0);
-//		$scope.reload();
+
 		$scope.pingData.start=getStartDate(0);
 		$scope.pingData.end=getEndDate(0);
 		$scope.reloadPingData();
 		$scope.totalDropped();
 	};
 
-		// This should load the page with todays date when the page is first opened
-//    $http.get('/api/beerdata')
-//        .success(function(data) {
-//			createChart(data);
-//		})
-//        .error(function(data) {
-//            console.log('Error: ' + data);
-//
-//    });
+
 
 		// Reloads the page with whatever the start/end boxes are set to
 		$scope.reload = function() {

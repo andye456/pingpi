@@ -131,7 +131,8 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout) {
 			},
     	zoom: {
       	enabled: true,
-      	rescale: true
+      	rescale: true,
+      	extent: [1, 100]
     	}
 		});
 		
