@@ -67,7 +67,7 @@ module.exports = function(app) {
 
 	};
 	
-	// This queries the db to find out how many dropped = true.
+	// This queries the db to find out how many ping have a 0 pingtime as this means that it failed.
 	var getDropped = function(req,res) {
 		if (req.body.start != "" && req.body.end != "") {
 			ping.find(
