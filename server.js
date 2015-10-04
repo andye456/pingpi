@@ -112,7 +112,14 @@ function writePingDataToMongo() {
 				}
 			});
 		} else {
-			console.log (target + ": " + error.toString ());
+			var pingobj = {'date':getDateTime(), 'unreachable':true};
+			db.collection('pingdata').insert(pingobj, function (err, result) {
+				if (err) {
+					console.log(err);
+					} else {
+						console.log('Inserted %d documents into the "pingdata" collection. The documents inserted with "_id" are:', result.length, result);
+					}
+			});
 		}
 	} else {
 		//console.log (target + ": Alive (ms=" + ms + ")");

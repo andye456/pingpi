@@ -78,12 +78,13 @@
 	<div class="col-sm-5 col-sm-offset-3 text-center">
 			<table class="table" >
 				<thead>
-					<tr><td>Date</td><td>Dropped</td><tr>
+					<tr><td>Date</td><td>Dropped</td><td>Unreachable</td><tr>
 				</thead>
 				<tbody>
 					<tr ng-repeat="fail in fails">
 					<td>{{ fail.date }}</td>
 					<td>{{ fail.dropped }}</td>
+					<td>{{ fail.unreachable }}</td>
 					</tr>
 				</tbody>
 			</table>

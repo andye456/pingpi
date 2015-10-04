@@ -1,4 +1,5 @@
 //lets require/import the mongodb native drivers.
+
 var mongodb = require('mongodb');
 var assert = require('assert');
 //We need to work with "MongoClient" interface in order to connect to a mongodb server.

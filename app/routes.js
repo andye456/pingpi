@@ -72,7 +72,7 @@ module.exports = function(app) {
 		if (req.body.start != "" && req.body.end != "") {
 			ping.find(
 				{ date : { $gte: req.body.start, $lt: req.body.end },
-				  dropped: true
+				   $or: [ {dropped: true}, {unreachable: true} ] 
 				},
 			 	function(err, pingvals) {
 
@@ -102,6 +102,7 @@ module.exports = function(app) {
 	app.get('/api/dropped/', function(req,res) {
 		getDropped(req,res);
 	});
+	
     // application -------------------------------------------------------------
 
 	app.get('*', function(req, res) {

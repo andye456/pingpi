@@ -63,6 +63,7 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout) {
         $http.post('/api/pingdata', $scope.pingData)
             .success(function(pdata) {
 					createPingChart(pdata);
+					// if a $scope function is called from this script then need to use $scope
 					$scope.totalDropped();
 					console.log(pdata);
 					})
@@ -99,18 +100,21 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout) {
 
 				keys: {
 						x: 'date', // This is the x-axis values
-	  				value: ['dropped'] // This is the y-axis values
+	  				value: ['dropped','unreachable'] // This is the y-axis values
 				},
 				types: {
-					['dropped']: 'bar'
+					['dropped']: 'bar',
+					['unreachable']: 'bar'
 				},
-				color: function(color, d) {
+				color: { ['dropped']: function(color, d) {
     			var color = d3.rgb("#55AAFF");
     			if (d.index % 2 == 0) {
       			color = color.darker(1.2);
     			}
     			return color;
-  			}					
+  			},
+				['unreachable']: '#ff0000'
+				}
 			},
 				bar: {
 		    width: 10
