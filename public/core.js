@@ -10,7 +10,7 @@ When the buttons are pressed in the UI filterDate() and filterPingData() are cal
 
 
 var beerApp = angular.module('graphApp', ['ui.bootstrap']);
-beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout) {
+beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout, $log) {
 
 	var startDate = new Date();
 	var endDate = new Date();
@@ -26,6 +26,41 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout) {
 		$scope.pingData.end=getEndDate(0);
 		$scope.reloadPingData();
 		$scope.totalDropped();
+		readConfig();
+	};
+
+	// Bound to the form input
+	$scope.config = {
+	gatewayip : null,
+	mask : null,
+	port : null,
+	wpasid : null,
+	wpapass : null,
+	extping : null
+	};
+
+	// This is called on startup and whenever the config dropdown is activated
+	// it reads the current config and populates the collection above - which are then bound to the form inputs.
+	$scope.readConfig = function() {
+		// This is just a hard-coded stub, the routes should be called which gets the real values from the files etc.
+		$scope.config.gatewayip = "192.168.1.1";
+		$scope.config.mask = "255.255.255.0";
+		$scope.config.port = "8080";
+		$scope.config.wpasid = "SKY46773";
+		$scope.config.wpapass = "TJWVRCWQ";
+		$scope.config.extping = "2.127.252.242"; // google.com
+	};
+
+
+
+	// Show/hide the settings dialog	
+	$scope.tab = false; 	
+	$scope.toggle = function() {
+	
+		if($scope.tab)
+			$scope.tab = false;
+		else
+			$scope.tab=true;
 	};
 
 

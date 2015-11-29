@@ -67,12 +67,12 @@ module.exports = function(app) {
 
 	};
 	
-	// This queries the db to find out how many ping have a 0 pingtime as this means that it failed.
+	// This queries the db to find out how many dropped = true.
 	var getDropped = function(req,res) {
 		if (req.body.start != "" && req.body.end != "") {
 			ping.find(
 				{ date : { $gte: req.body.start, $lt: req.body.end },
-				  dropped: true
+				   $or: [ {dropped: true}, {unreachable: true} ] 
 				},
 			 	function(err, pingvals) {
 
@@ -85,7 +85,21 @@ module.exports = function(app) {
 			});
 		}
 	}
-
+	
+	// place holder for getting the config
+	var getConfig = function(req,res) {
+		
+	}
+	
+	// polace holder for setting the config
+	// gatewayip,mask,port,wpasid,wpapass,extping
+	app.post('/api/routerdata', function(req,res) {
+		setConfig(req,res);
+	}
+	
+	app.get('/api/routerdata', function(req,res) {
+		getConfig(req,res);
+	}
 
 	app.get('/api/pingdata/', function(req,res) {
 		getPingFromMongo(req,res);
@@ -102,6 +116,7 @@ module.exports = function(app) {
 	app.get('/api/dropped/', function(req,res) {
 		getDropped(req,res);
 	});
+	
     // application -------------------------------------------------------------
 
 	app.get('*', function(req, res) {

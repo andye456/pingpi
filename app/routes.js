@@ -85,7 +85,21 @@ module.exports = function(app) {
 			});
 		}
 	}
-
+	
+	// place holder for getting the config
+	var getConfig = function(req,res) {
+		
+	}
+	
+	// polace holder for setting the config
+	// gatewayip,mask,port,wpasid,wpapass,extping
+	app.post('/api/routerdata', function(req,res) {
+		setConfig(req,res);
+	});
+	
+	app.get('/api/routerdata', function(req,res) {
+		getConfig(req,res);
+	});
 
 	app.get('/api/pingdata/', function(req,res) {
 		getPingFromMongo(req,res);

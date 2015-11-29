@@ -47,41 +47,7 @@ app.use(methodOverride());
 // load the routes
 require('./app/routes')(app);
 
-
-// This reads from the Pi temperature file that is written to by the temperature probe
-// every hour and writes this information along with the date/time to a Mongodb
-//setInterval(readDataFromPi, 600000); // every 10 mins.
-
 setInterval(writePingDataToMongo,5000); // every 5 seconds
-
-function readDataFromPi() {
-		// read the temp from the data file
-		fs.readFile('/sys/bus/w1/devices/28-021553902fff/w1_slave', function(err,tempdata) {
-		if (err) {
-			return console.log(err);
-		}
-		arr = tempdata.toString().split("t=");
-		tmp=parseFloat(arr[1])/1000.0;
-
-		// Add the {date:, temp:} js object to the database
-
-		var beerobj = {'date':getDateTime(), 'temp':tmp};
-
-
-		    // Insert some data into the Mongodb
-		db.collection('beerdata').insert(beerobj, function (err, result) {
-			if (err) {
-				console.log(err);
-			} else {
-				console.log('Inserted %d documents into the "beertemp" collection. The documents inserted with "_id" are:', result.length, result);
-			}
-		});
-
-
-	});
-
-};
-
 
 var options = {
     networkProtocol: ping.NetworkProtocol.IPv4,
@@ -91,6 +57,9 @@ var options = {
     timeout: 4000,
     ttl: 128
 };
+
+
+
 
 var session = ping.createSession(options);
 function writePingDataToMongo() {
