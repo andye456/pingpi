@@ -26,7 +26,7 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout, $log
 		$scope.pingData.end=getEndDate(0);
 		$scope.reloadPingData();
 		$scope.totalDropped();
-		readConfig();
+		$scope.readConfig();
 	};
 
 	// Bound to the form input
@@ -42,17 +42,44 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout, $log
 	// This is called on startup and whenever the config dropdown is activated
 	// it reads the current config and populates the collection above - which are then bound to the form inputs.
 	$scope.readConfig = function() {
-	
 		// This is just a hard-coded stub, the routes should be called which gets the real values from the files etc.
+/*
 		$scope.config.gatewayip = "192.168.1.1";
 		$scope.config.mask = "255.255.255.0";
 		$scope.config.port = "8080";
 		$scope.config.wpasid = "SKY46773";
 		$scope.config.wpapass = "TJWVRCWQ";
 		$scope.config.extping = "2.127.252.242"; // google.com
+	*/
+	// Reads from the REST API.
+	//alert("Read Config");
+		$http.get('/api/configdata', $scope.config)
+			.success(function(data) {
+				//$scope.config=data;
+				$scope.config.gatewayip = data.default_gateway;
+				$scope.config.mask = data.mask;
+				$scope.config.port = data.lanport;
+				$scope.config.wpasid = data.ssid;
+				$scope.config.wpapass = data.password;
+				$scope.config.extping = data.extping; // google.com
+				$scope.config.timeperiod = data.timeperiod;
+				
+		});
+				
 	};
 
 
+	$scope.writeConfig = function() {
+			console.log("write config");
+		$http.post('/api/configdata', $scope.config)
+		.success(function(data){
+		//	$scope.config=data;
+		//					alert("written config");
+		})
+		.error(function(data){
+			console.log("Error: "+data);
+		});
+	};
 
 	// Show/hide the settings dialog	
 	$scope.tab = false; 	
@@ -67,17 +94,6 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout, $log
 
 
 		// Reloads the page with whatever the start/end boxes are set to
-		$scope.reload = function() {
-	        $http.post('/api/beerdata', $scope.formData)
-            .success(function(data) {
-					createChart(data);
-					console.log(data);
-					})
-						.error(function(data) {
-                console.log('Error: ' + data);
-					});
-		
-		};
 
 		$scope.reloadPingData = function() {
 	        $http.post('/api/pingdata', $scope.pingData)
@@ -90,6 +106,8 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout, $log
 					});
 		
 		};
+		
+		
 		
 
    // when submitting the add form, send the text to the node API

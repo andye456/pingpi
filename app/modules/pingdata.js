@@ -7,3 +7,4 @@ var mongoose = require('mongoose');
 var schema = new mongoose.Schema({ date: String, dropped: Boolean, unreachable: Boolean },{ collection: 'pingdata' });
 module.exports = mongoose.model('pingdata', schema);
 
+

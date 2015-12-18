@@ -3,7 +3,7 @@
 //********************************************************************//
 
 
-// This is running on the Raspberry Pi and is used to collect temperature data and output it in
+// This is running on the Raspberry Pi and is used to collect ping data and output it in
 // JSON format when the URL is called.
 
 // server.js
@@ -57,6 +57,26 @@ var options = {
     timeout: 4000,
     ttl: 128
 };
+
+// Write config info to the DB
+// GatewayIP, mask, port, time interval, external IP, wpa_id, wpa_pass
+function writeConfigToMongo(gateway_ip, mask, port, time_interval, ext_ip, wpa_id, wpa_pass) {
+	var configobj = {'date': getDateTime(),'gateway_ip':gateway_ip, 'mask':mask, 'port':port, 'time_interval':time_interval, 'ext_ip':ext_ip, 'wpa_id':wpa_id, 'wpa_pass':wpa_pass};
+	db.collection('pingdata').insert(configobj, function (err, result) {
+		if (err) {
+			console.log(err);
+		} else {
+			console.log('Inserted %d documents into the "config" collection. The documents inserted with "_id" are:', result.length, result);
+		}
+	});
+
+};
+
+function writeConfigToFile(gateway_ip, mask, port, time_interval, ext_ip, wpa_id, wpa_pass) {
+
+	
+
+}
 
 
 

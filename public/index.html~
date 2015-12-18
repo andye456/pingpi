@@ -30,7 +30,7 @@
 		<div class="jumbotron text-center">
 			<h1>Raspberry Pi ping probe<span class="label label-info"></span> </h1>
 <!--button type="button" class="btn btn-default btn-sm"-->
-  <span class="glyphicon glyphicon-cog {'active' : button == 'red'}" aria-hidden="true" style="cursor:pointer" ng-click="toggle(); readConfig()"></span>
+  <span class="glyphicon glyphicon-cog" aria-hidden="true" style="cursor:pointer" ng-click="toggle(); readConfig()"></span>
 <!--/button-->
 		</div>
 		<div>
@@ -43,35 +43,40 @@
 						<tr><td align="right">
 						Gateway IP
 						</td><td>
-						<input type="text" class="form-control" placeholder="IP Address" aria-describedby="basic-addon1" ng-model="config.gatewayip" ng-pattern='/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/' ng-model-options="{ updateOn: 'blur' }">
+						<input type="text" class="form-control" placeholder="IP Address" aria-describedby="basic-addon1" ng-model="config[1].gatewayip" ng-pattern='/^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/' ng-model-options="{ updateOn: 'blur' }">
 						</td></tr>
 						<tr><td align="right">
 						Mask
 						</td><td>
-						<input type="text" class="form-control" placeholder="IP Mask" aria-describedby="basic-addon1" ng-model="config.mask">
+						<input type="text" class="form-control" placeholder="IP Mask" aria-describedby="basic-addon1" ng-model="config[1].mask">
 						</td></tr>
 						<tr><td align="right">
 						Port
 						</td><td>
-						<input type="text" class="form-control" placeholder="Port for this web page" aria-describedby="basic-addon1" ng-model="config.port">
+						<input type="text" class="form-control" placeholder="Port for this web page" aria-describedby="basic-addon1" ng-model="config[1].port">
 						</td></tr>
 						<tr><td align="right">
 						wpasid
 						</td><td>
-						<input type="text" class="form-control" placeholder="SSID of the router" aria-describedby="basic-addon1" ng-model="config.wpasid">
+						<input type="text" class="form-control" placeholder="SSID of the router" aria-describedby="basic-addon1" ng-model="config[1].wpasid">
 						</td></tr>
 						<tr><td align="right">
 						wpapass
 						</td><td>
-						<input type="text" class="form-control" placeholder="password" aria-describedby="basic-addon1" ng-model="config.wpapass">
+						<input type="text" class="form-control" placeholder="password" aria-describedby="basic-addon1" ng-model="config[1].wpapass">
 						</td></tr>
 						<tr><td align="right">
 						External ping IP
 						</td><td>
-						<input type="text" class="form-control" placeholder="IP Address" aria-describedby="basic-addon1" ng-model="config.extping">
+						<input type="text" class="form-control" placeholder="IP Address" aria-describedby="basic-addon1" ng-model="config[1].extping">
+						</td></tr>
+						<tr><td align="right">
+						Time Period
+						</td><td>
+						<input type="text" class="form-control" placeholder="Miliseconds" aria-describedby="basic-addon1" ng-model="config[1].timeperiod">
 						</td></tr>
 						<tr><td colspan="2">
-						<span type="submit" class="glyphicon glyphicon-ok" style="cursor:pointer" ng-click="toggle()"></span>
+						<span type="submit" class="glyphicon glyphicon-ok" style="cursor:pointer" ng-click="writeConfig()"></span>
 						</td></tr>
 					</table>
 				</form>
