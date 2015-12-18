@@ -9,7 +9,5 @@ cd pingpi<br>
 npm install<br>
 sudo nodemon server.js<br>
 <br>
-TODO:<br>
-Display down times in collapsible list<br>
-Display 'network unreachable on same graph<br>
+
 
