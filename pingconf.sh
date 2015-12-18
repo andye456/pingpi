@@ -77,6 +77,11 @@ get_user_input() {
 	read input
 	[[ $input != "" ]] && extip=$input
 	
+	echo -n "Time period		 [$timeperiod]"
+	read input
+	[[ $input != "" ]] && timeperiod=$input
+	
+	
 	check_ok
 }
 
@@ -93,7 +98,9 @@ check_ok() {
 		echo "lanip=$lanip" >> $configfile
 		echo "lanport=$lanport" >> $configfile
 		echo "extip=$extip" >> $configfile
-		setInterfaces $default_gateway $mask $lanip $ssid $password
+		echo "timeperiod=$timeperiod" >> $configfile
+		# Note the call does not include timeperiod or port as these are only in node server.js
+		setInterfaces $default_gateway $mask $lanip $ssid $password $timeperiod
 	elif [[ $input == "n" ]]
 	then
 		get_user_input
