@@ -20,6 +20,19 @@ var methodOverride = require('method-override'); // simulate DELETE and PUT (exp
 var ping = require ("net-ping");
 fs = require('fs');
 
+var appConf = {
+	default_gateway: null,
+	mask:null,
+	ssid:null,
+	password:null,
+	lanip:null,
+	lanport:null,
+	extip:null,
+	timeperiod:null
+};
+
+
+var appConf = [];
 
 // configuration =================
 // connect to mongoDB database on localhost 
@@ -40,14 +53,54 @@ app.use(bodyParser.json());                                     // parse applica
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
 app.use(methodOverride());
 
-
-// routes ======================================================================
-
-    // api ---------------------------------------------------------------------
 // load the routes
 require('./app/routes')(app);
 
+
+var readConfigFile = function(req,res) {
+	
+		readConfigFromFile("/home/pi/.pingpirc", function(result) {
+				console.log("res from server.js = "+result);
+				var jsonVals=JSON.parse(result);
+				appConf=jsonVals;
+				// listen (start app with node server.js) ======================================
+				console.log(">>>"+appConf["default_gateway"]);
+				app.listen(appConf["lanport"]);
+				console.log("App listening on port "+appConf["lanport"]);
+				
+		});
+		
+/*
+		fs.readFile(filename, 'utf8', function(err, data) {
+		
+			var lines = data.split('\n');
+		  for(var i = 0; i < lines.length-1; i++) {
+		    var parts = lines[i].split('=');
+		    var idx=parts[0].trim();
+		    appConf[idx] = parts[1];
+		    console.log("appConf["+idx+"] "+appConf[idx]);
+		  }
+		
+
+		});
+*/
+}
+
+var echoConfig = function() {
+	console.log("Echoing config");
+	console.log("length = "+appConf.length);
+	for(x in appConf) {
+		console.log("appConf["+x+"] = "+appConf[x]);
+	}
+}
+
+readConfigFile();
+echoConfig();
+
+
+// read the data file with temp val every $timeperiod seconds
 setInterval(writePingDataToMongo,5000); // every 5 seconds
+
 
 var options = {
     networkProtocol: ping.NetworkProtocol.IPv4,
@@ -60,6 +113,7 @@ var options = {
 
 // Write config info to the DB
 // GatewayIP, mask, port, time interval, external IP, wpa_id, wpa_pass
+/*
 function writeConfigToMongo(gateway_ip, mask, port, time_interval, ext_ip, wpa_id, wpa_pass) {
 	var configobj = {'date': getDateTime(),'gateway_ip':gateway_ip, 'mask':mask, 'port':port, 'time_interval':time_interval, 'ext_ip':ext_ip, 'wpa_id':wpa_id, 'wpa_pass':wpa_pass};
 	db.collection('pingdata').insert(configobj, function (err, result) {
@@ -71,17 +125,11 @@ function writeConfigToMongo(gateway_ip, mask, port, time_interval, ext_ip, wpa_i
 	});
 
 };
-
-function writeConfigToFile(gateway_ip, mask, port, time_interval, ext_ip, wpa_id, wpa_pass) {
-
-	
-
-}
-
-
+*/
 
 
 var session = ping.createSession(options);
+
 function writePingDataToMongo() {
 	var target = "2.127.252.242";
 	session.pingHost (target, function (error, target, sent, rcvd) {
@@ -144,6 +192,4 @@ function getDateTime() {
 }
 
 
-// listen (start app with node server.js) ======================================
-app.listen(8080);
-console.log("App listening on port 8080");
+

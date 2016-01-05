@@ -1,0 +1,3 @@
+# Nmap 6.47 scan initiated Wed Dec 30 04:46:08 2015 as: nmap -oN 192.168.1.*
+WARNING: No targets were specified, so 0 hosts scanned.
+# Nmap done at Wed Dec 30 04:46:08 2015 -- 0 IP addresses (0 hosts up) scanned in 0.10 seconds

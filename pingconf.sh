@@ -16,25 +16,31 @@ setInterfaces() {
 # Ooo this looks rather complicated, well I can never remember stuff like this it just makes sure you can run the command as root.
 # If you don't put the /dev/null bit in then it does the tee before the sudo and fails.
 # Cool or what!
-sudo tee /etc/network/interfaces.tmp > /dev/null << _EOF
+sudo tee /etc/network/interfaces > /dev/null << _EOF
 auto lo
 iface lo inet loopback
 iface eth0 inet dhcp
 allow-hotplug wlan0
 auto wlan0
 iface wlan0 inet static
-wpa-ssid $4
-wpa-psk $5
 address $3
 netmask $2
 gateway $1
+wpa-ssid "$4"
+wpa-psk "$5"
 
 _EOF
+
+echo "Restarting interfaces...."
+echo "You will be logged off"
+echo "You may have to connect to a different IP address, browse to a different address/port"
+sudo service networking restart
 
 } # END setInterfaces
 
 get_user_input() {
 	configfile=~/.pingpirc
+	interfaces=/etc/network/interfaces
 
 	echo "..Reading Properties file.."
 	if [ -r $configfile ]
@@ -99,6 +105,7 @@ check_ok() {
 		echo "lanport=$lanport" >> $configfile
 		echo "extip=$extip" >> $configfile
 		echo "timeperiod=$timeperiod" >> $configfile
+ 		# write properties to /etc/network/interfaces
 		# Note the call does not include timeperiod or port as these are only in node server.js
 		setInterfaces $default_gateway $mask $lanip $ssid $password $timeperiod
 	elif [[ $input == "n" ]]

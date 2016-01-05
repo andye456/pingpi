@@ -43,24 +43,17 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout, $log
 	// it reads the current config and populates the collection above - which are then bound to the form inputs.
 	$scope.readConfig = function() {
 		// This is just a hard-coded stub, the routes should be called which gets the real values from the files etc.
-/*
-		$scope.config.gatewayip = "192.168.1.1";
-		$scope.config.mask = "255.255.255.0";
-		$scope.config.port = "8080";
-		$scope.config.wpasid = "SKY46773";
-		$scope.config.wpapass = "TJWVRCWQ";
-		$scope.config.extping = "2.127.252.242"; // google.com
-	*/
+		
 	// Reads from the REST API.
-	//alert("Read Config");
 		$http.get('/api/configdata', $scope.config)
 			.success(function(data) {
 				//$scope.config=data;
 				$scope.config.gatewayip = data.default_gateway;
 				$scope.config.mask = data.mask;
-				$scope.config.port = data.lanport;
 				$scope.config.wpasid = data.ssid;
 				$scope.config.wpapass = data.password;
+				$scope.config.lanip = data.lanip;
+				$scope.config.port = data.lanport;
 				$scope.config.extping = data.extip; // google.com
 				$scope.config.timeperiod = data.timeperiod;
 				

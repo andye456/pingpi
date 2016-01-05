@@ -86,14 +86,43 @@ module.exports = function(app) {
 			timeperiod	:	req.body.timeperiod
 		}, 
 		function(err,config) {
-			if(err)
+			if(err) {
 				console.log("Error"+err);
-		
-			console.log("gatewayip   :"	+req.body.gatewayip	+"\nmask		:"	+req.body.mask+"\nport		:"	+req.body.port+"\nwpasid		:"	+req.body.wpasid+"\nwpapass		:"	+req.body.wpapass+"\nextping		:"	+req.body.extping+"\ntimeperiod	:"	+req.body.timeperiod);
-		
+			} else {
+				console.log("gatewayip   :"	+req.body.gatewayip	+"\nmask		:"	+req.body.mask+"\nport		:"	+req.body.port+"\nwpasid		:"	+req.body.wpasid+"\nwpapass		:"	+req.body.wpapass+"\nextping		:"	+req.body.extping+"\ntimeperiod	:"	+req.body.timeperiod);
+				
+				fs.writeFile("/home/pi/.pingpirc","default_gateway="	+req.body.gatewayip	+"\nmask="	+req.body.mask+"\nssid="	+req.body.wpasid+"\npassword="	+req.body.wpapass+"\nlanip="+req.body.lanip+"\nlanport="	+req.body.port+"\nextip="	+req.body.extping+"\ntimeperiod="	+req.body.timeperiod+"\n",'utf8', function(err) {
+
+
+
+				
+				});
+			
+			}
 			
 		});
 	}
+	
+	readConfigFromFile = function(filename, callback) {
+		var strVals="{";
+		fs.readFile(filename, 'utf8', function(err, data) {
+			if (err) throw err;
+			console.log('OK: ' + filename);
+			var lines = data.split('\n');
+			for(var line = 0; line < lines.length-1; line++) {
+				var vals=lines[line].split("=");
+
+				if(line != lines.length-2)
+					strVals+="\"" +vals[0]+ "\":\"" +vals[1]+ "\",";
+				else
+					strVals+="\"" +vals[0]+ "\":\"" +vals[1]+ "\"";
+					
+			}
+			strVals+="}";			
+			callback(strVals);
+
+		});	
+	};
 	
 	// polace holder for setting the config
 	// gatewayip,mask,port,wpasid,wpapass,extping
@@ -101,34 +130,19 @@ module.exports = function(app) {
 		setConfig(req,res);
 	});
 	
-	
+		
+	// This is called from readConfig() in core.js and in turn gets the JSON from the URL /api/configdata
 	app.get('/api/configdata', function(req,res) {
-	
-		var filename="/home/pi/.pingpirc-test";
-		var strVals="{";
-		fs.readFile(filename, 'utf8', function(err, data) {
-			if (err) throw err;
-			//console.log('OK: ' + filename);
-			var lines = data.split('\n');
-			for(var line = 0; line < lines.length-1; line++){
-				var vals=lines[line].split("=");
+		// calls the function above
+		readConfigFromFile("/home/pi/.pingpirc", function(result) {
+				console.log("res = "+result);
+				var jsonVals=JSON.parse(result);
+				res.json(jsonVals);
+		});
 
-				//console.log("line"+line+" "+lines[line]);
-				//console.log("key = "+vals[0]+" val="+vals[1]);
-				if(line != lines.length-2)
-					strVals+="\"" +vals[0]+ "\":\"" +vals[1]+ "\",";
-				else
-					strVals+="\"" +vals[0]+ "\":\"" +vals[1]+ "\"";
-					
-			}
-			strVals+="}";
-			var jsonVals=JSON.parse(strVals);
-			console.log(jsonVals);
-			res.json(jsonVals);
-			//console.log(data)
-		});	
-	
 	});
+	
+
 
 	app.get('/api/pingdata/', function(req,res) {
 		getPingFromMongo(req,res);
