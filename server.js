@@ -53,10 +53,13 @@ app.use(bodyParser.json());                                     // parse applica
 app.use(bodyParser.json({ type: 'application/vnd.api+json' })); // parse application/vnd.api+json as json
 app.use(methodOverride());
 
+
 // load the routes
 require('./app/routes')(app);
+//var interval=5000; // default time period
 
-
+// Currently this is only read at startup when it is called from main body below the function
+// need to call it on update of UI
 var readConfigFile = function(req,res) {
 	
 		readConfigFromFile("/home/pi/.pingpirc", function(result) {
@@ -67,23 +70,12 @@ var readConfigFile = function(req,res) {
 				console.log(">>>"+appConf["default_gateway"]);
 				app.listen(appConf["lanport"]);
 				console.log("App listening on port "+appConf["lanport"]);
+
+				//interval=appConf["timeperiod"];
+				console.log("time set to: "+appConf["timeperiod"])
+				setInterval(writePingDataToMongo,appConf["timeperiod"]);
 				
 		});
-		
-/*
-		fs.readFile(filename, 'utf8', function(err, data) {
-		
-			var lines = data.split('\n');
-		  for(var i = 0; i < lines.length-1; i++) {
-		    var parts = lines[i].split('=');
-		    var idx=parts[0].trim();
-		    appConf[idx] = parts[1];
-		    console.log("appConf["+idx+"] "+appConf[idx]);
-		  }
-		
-
-		});
-*/
 }
 
 var echoConfig = function() {
@@ -99,7 +91,7 @@ echoConfig();
 
 
 // read the data file with temp val every $timeperiod seconds
-setInterval(writePingDataToMongo,5000); // every 5 seconds
+//var run = setInterval(writePingDataToMongo,interval); // every 5 seconds
 
 
 var options = {
@@ -111,30 +103,16 @@ var options = {
     ttl: 128
 };
 
-// Write config info to the DB
-// GatewayIP, mask, port, time interval, external IP, wpa_id, wpa_pass
-/*
-function writeConfigToMongo(gateway_ip, mask, port, time_interval, ext_ip, wpa_id, wpa_pass) {
-	var configobj = {'date': getDateTime(),'gateway_ip':gateway_ip, 'mask':mask, 'port':port, 'time_interval':time_interval, 'ext_ip':ext_ip, 'wpa_id':wpa_id, 'wpa_pass':wpa_pass};
-	db.collection('pingdata').insert(configobj, function (err, result) {
-		if (err) {
-			console.log(err);
-		} else {
-			console.log('Inserted %d documents into the "config" collection. The documents inserted with "_id" are:', result.length, result);
-		}
-	});
-
-};
-*/
 
 
 var session = ping.createSession(options);
 
 function writePingDataToMongo() {
+	console.log("PING!\n");
 	var target = "2.127.252.242";
 	session.pingHost (target, function (error, target, sent, rcvd) {
 	var ms = rcvd - sent;
-	var pingtime=0; // not really used.
+
 	if(error) {
 		if (error instanceof ping.RequestTimedOutError) {
 			//console.log (target + ": Not alive");

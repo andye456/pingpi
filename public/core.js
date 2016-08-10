@@ -121,7 +121,7 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout, $log
 
     };
 
-		$scope.totalDropped = function() {
+	$scope.totalDropped = function() {
 	        $http.post('/api/dropped', $scope.pingData)
             .success(function(data) {
 					$scope.fails = data;
@@ -191,6 +191,11 @@ beerApp.controller('GraphCtrl',function($scope, $http, $interval, $timeout, $log
 
 	var period=0;
 
+	// These functions return the start and end date depending on which button has been pressed in the UI
+	// IF "Today" is pressed then diff will be set to 999 by the function call in the html page and period is set to 0
+	// If "Back" is pressed then diff will be set to -1 and this causes the val of date to be set to yesterday
+	// If "Forward" is pressed the diff is set to +1 and this causes the val of date to be set to tomorrow
+	// 
 	var getStartDate = function(diff) {
 	  period=period+diff
 		if(diff==999) {
